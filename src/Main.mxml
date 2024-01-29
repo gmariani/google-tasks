@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/mx" 
+					   width="400" 
+					   height="600" 
+					   alwaysInFront="true" 
+					   showStatusBar="false"
+					   creationComplete="init()"
+					   closing="closing()" 
+>
+	<fx:Script>
+		<![CDATA[
+			import FileSerializer;		
+			import flash.events.ErrorEvent;
+			import air.update.ApplicationUpdaterUI;
+			import air.update.events.UpdateEvent;
+			import mx.controls.Alert;
+			
+			private var up:UserPrefs;
+			private var appUpdater:ApplicationUpdaterUI = new ApplicationUpdaterUI();
+			
+			private function init():void
+			{
+				this.up = FileSerializer.readObjectFromFile("prefs.up") as UserPrefs;
+				if(up) {
+					this.nativeWindow.x = up.appPosX;
+					this.nativeWindow.y = up.appPosY;
+					this.nativeWindow.width = up.appWidth;
+					this.nativeWindow.height = up.appHeight;
+				} else {
+					this.up = new UserPrefs();
+				}
+				checkForUpdate();
+			}
+			
+			private function closing():void
+			{
+				this.up.appPosX = this.nativeWindow.x;
+				this.up.appPosY = this.nativeWindow.y;
+				this.up.appWidth = this.nativeWindow.width;
+				this.up.appHeight = this.nativeWindow.height;
+				FileSerializer.writeObjectToFile(this.up, "prefs.up");
+			}		
+				
+			
+			private function checkForUpdate():void {			
+				appUpdater.updateURL = "http://www.coursevector.com/projects/googletasks/update.xml"; // Server-side XML file describing update
+				appUpdater.isCheckForUpdateVisible = false; // We won't ask permission to check for an update
+				appUpdater.addEventListener(UpdateEvent.INITIALIZED, onUpdate); // Once initialized, run onUpdate
+				appUpdater.addEventListener(ErrorEvent.ERROR, onError); // If something goes wrong, run onError
+				appUpdater.initialize(); // Initialize the update framework
+			}
+			
+			private function onError(event:ErrorEvent):void {
+				Alert.show(event.toString());
+			}
+			
+			private function onUpdate(event:UpdateEvent):void {
+				appUpdater.checkNow(); // Go check for an update now
+			}
+		]]>
+	</fx:Script>
+	<mx:HTML width="100%" height="100%" location="http://mail.google.com/tasks/canvas"/>
+</s:WindowedApplication>

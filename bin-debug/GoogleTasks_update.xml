@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<update xmlns="http://ns.adobe.com/air/framework/update/description/1.0">
+<version>v1.0.2</version>
+<url>http://www.coursevector.com/downloads/GoogleTasks-1-0-2.air</url>
+<description><![CDATA[
+ v1.0.2
+ * Upgrading AIR Updater
+v1.0.1
+ * Added icons.
+v1.0.0
+ * Always on top - I wanted it always on top of my other windows.
+ * Saves size and position - This way you are not resizing and moving it every time you open it.
+]]></description>
+</update>
